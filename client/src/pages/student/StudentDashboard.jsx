@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import DashboardLayout from "../../components/DashboardLayout";
 import { getMyProject } from "../../services/studentService";
 import { getProjectTasks } from "../../services/taskService";
@@ -44,13 +46,11 @@ function StudentDashboard() {
               <div className="card-body">
 
                 <div className="d-flex justify-content-between align-items-center">
-
                   <h3>{project.title}</h3>
 
                   <span className="badge bg-success fs-6">
                     In Progress
                   </span>
-
                 </div>
 
                 <hr />
@@ -58,25 +58,20 @@ function StudentDashboard() {
                 <p>{project.description}</p>
 
                 <div className="row">
-
                   <div className="col-md-4">
-                    <strong>Duration</strong>
-                    <br />
+                    <strong>Duration</strong><br />
                     {project.duration}
                   </div>
 
                   <div className="col-md-4">
-                    <strong>Difficulty</strong>
-                    <br />
+                    <strong>Difficulty</strong><br />
                     {project.difficulty}
                   </div>
 
                   <div className="col-md-4">
-                    <strong>Deadline</strong>
-                    <br />
+                    <strong>Deadline</strong><br />
                     {new Date(project.deadline).toLocaleDateString()}
                   </div>
-
                 </div>
 
               </div>
@@ -86,7 +81,9 @@ function StudentDashboard() {
 
               <div className="card-body">
 
-                <h4 className="mb-4">My Tasks</h4>
+                <h4 className="mb-4">
+                  My Tasks
+                </h4>
 
                 {tasks.length === 0 ? (
                   <div className="alert alert-info">
@@ -110,21 +107,26 @@ function StudentDashboard() {
 
                       <p>{task.description}</p>
 
-                      <div className="row">
+                      <div className="row mb-3">
 
                         <div className="col-md-4">
-                          <strong>Marks</strong>
-                          <br />
+                          <strong>Marks</strong><br />
                           {task.maxMarks}
                         </div>
 
                         <div className="col-md-4">
-                          <strong>Due Date</strong>
-                          <br />
+                          <strong>Due Date</strong><br />
                           {new Date(task.dueDate).toLocaleDateString()}
                         </div>
 
                       </div>
+
+                      <Link
+                        to={`/student/submit-work/${task._id}`}
+                        className="btn btn-success"
+                      >
+                        Submit Work
+                      </Link>
 
                     </div>
                   ))
