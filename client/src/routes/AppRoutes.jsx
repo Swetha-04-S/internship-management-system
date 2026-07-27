@@ -10,6 +10,7 @@ import Students from "../pages/admin/Students";
 import CreateProject from "../pages/admin/CreateProject";
 import CreateTask from "../pages/admin/CreateTask";
 import SubmitWork from "../pages/student/SubmitWork";
+import ReviewSubmissions from "../pages/admin/ReviewSubmissions";
 
 function AppRoutes() {
   return (
@@ -33,6 +34,8 @@ function AppRoutes() {
           path="/student/submit-work/:taskId"
           element={<SubmitWork />}
         />
+        <Route path="/reviews" element={<ReviewSubmissions />} />
+
       </Routes>
     </BrowserRouter>
   );

@@ -43,8 +43,47 @@ const getSubmissions = async (req, res) => {
 
   }
 };
+// Review Submission
+const reviewSubmission = async (req, res) => {
+    try {
+  
+      const { id } = req.params;
+      const { marks, feedback } = req.body;
+  
+      const submission = await Submission.findById(id);
+  
+      if (!submission) {
+        return res.status(404).json({
+          success: false,
+          message: "Submission not found",
+        });
+      }
+  
+      submission.marks = marks;
+      submission.feedback = feedback;
+      submission.status = "Reviewed";
+  
+      await submission.save();
+  
+      res.status(200).json({
+        success: true,
+        message: "Submission reviewed successfully",
+        submission,
+      });
+  
+    } catch (error) {
+  
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+  
+    }
+  };
+
 
 module.exports = {
   createSubmission,
   getSubmissions,
+  reviewSubmission,
 };
