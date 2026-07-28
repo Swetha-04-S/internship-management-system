@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import DashboardLayout from "../../components/DashboardLayout";
 
 import {
@@ -9,55 +8,154 @@ import {
 
 function ReviewSubmissions() {
   const [submissions, setSubmissions] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+
+  const [reviewData, setReviewData] = useState({
+    marks: "",
+    feedback: "",
+  });
 
   useEffect(() => {
     loadSubmissions();
   }, []);
 
   const loadSubmissions = async () => {
-    const data = await getSubmissions();
-    setSubmissions(data);
+    try {
+      const data = await getSubmissions();
+      setSubmissions(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleReview = async (id) => {
-    const marks = prompt("Enter Marks");
+  const openReviewModal = (submission) => {
+    setSelectedSubmission(submission);
 
-    if (marks === null) return;
-
-    const feedback = prompt("Enter Feedback");
-
-    if (feedback === null) return;
-
-    const result = await reviewSubmission(id, {
-      marks,
-      feedback,
+    setReviewData({
+      marks: "",
+      feedback: "",
     });
+
+    setShowModal(true);
+  };
+
+  const saveReview = async () => {
+    if (!reviewData.marks || !reviewData.feedback) {
+      alert("Please enter marks and feedback.");
+      return;
+    }
+
+    const result = await reviewSubmission(
+      selectedSubmission._id,
+      reviewData
+    );
 
     if (result.success) {
       alert("Review Saved Successfully");
+
+      setShowModal(false);
+
       loadSubmissions();
     } else {
       alert(result.message);
     }
   };
 
+  const filteredSubmissions = submissions.filter((submission) => {
+    const matchesSearch =
+      submission.student.name
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      submission.student.email
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      submission.task.title
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "All" ||
+      submission.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <DashboardLayout>
+
       <h2 className="mb-4">Review Submissions</h2>
 
-      {submissions.length === 0 ? (
-        <div className="alert alert-info">
-          No submissions available.
+      {/* Search & Filter */}
+      <div className="row mb-4">
+
+        <div className="col-md-8">
+
+          <input
+            type="text"
+            className="form-control"
+            placeholder="🔍 Search by student, email or task..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
         </div>
+
+        <div className="col-md-4">
+
+          <select
+            className="form-select"
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(e.target.value)
+            }
+          >
+            <option>All</option>
+            <option>Reviewed</option>
+            <option>Submitted</option>
+          </select>
+
+        </div>
+
+      </div>
+
+      {filteredSubmissions.length === 0 ? (
+
+        <div className="alert alert-info">
+          No submissions found.
+        </div>
+
       ) : (
-        submissions.map((submission) => (
+
+        filteredSubmissions.map((submission) => (
+
           <div
             key={submission._id}
-            className="card shadow-sm mb-4"
+            className="card shadow-sm border-0 mb-4"
           >
+
             <div className="card-body">
 
-              <h5>{submission.task.title}</h5>
+              <div className="d-flex justify-content-between align-items-center">
+
+                <h5>{submission.task.title}</h5>
+
+                <span
+                  className={`badge ${
+                    submission.status === "Reviewed"
+                      ? "bg-success"
+                      : "bg-warning text-dark"
+                  }`}
+                >
+                  {submission.status}
+                </span>
+
+              </div>
+
+              <hr />
 
               <p>
                 <strong>Student:</strong>{" "}
@@ -96,20 +194,8 @@ function ReviewSubmissions() {
                 {submission.comments}
               </p>
 
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
-                  className={`badge ${
-                    submission.status === "Reviewed"
-                      ? "bg-success"
-                      : "bg-warning text-dark"
-                  }`}
-                >
-                  {submission.status}
-                </span>
-              </p>
-
               {submission.status === "Reviewed" ? (
+
                 <>
                   <p>
                     <strong>Marks:</strong>{" "}
@@ -121,21 +207,131 @@ function ReviewSubmissions() {
                     {submission.feedback}
                   </p>
                 </>
+
               ) : (
+
                 <button
                   className="btn btn-primary"
                   onClick={() =>
-                    handleReview(submission._id)
+                    openReviewModal(submission)
                   }
                 >
                   Review Submission
                 </button>
+
               )}
 
             </div>
+
           </div>
+
         ))
+
       )}
+
+      {/* Review Modal */}
+
+      {showModal && (
+
+        <div
+          className="modal fade show"
+          style={{
+            display: "block",
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
+
+          <div className="modal-dialog modal-lg">
+
+            <div className="modal-content">
+
+              <div className="modal-header">
+
+                <h5 className="modal-title">
+                  Review Submission
+                </h5>
+
+                <button
+                  className="btn-close"
+                  onClick={() =>
+                    setShowModal(false)
+                  }
+                />
+
+              </div>
+
+              <div className="modal-body">
+
+                <div className="mb-3">
+
+                  <label className="form-label">
+                    Marks
+                  </label>
+
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={reviewData.marks}
+                    onChange={(e) =>
+                      setReviewData({
+                        ...reviewData,
+                        marks: e.target.value,
+                      })
+                    }
+                  />
+
+                </div>
+
+                <div className="mb-3">
+
+                  <label className="form-label">
+                    Feedback
+                  </label>
+
+                  <textarea
+                    rows="4"
+                    className="form-control"
+                    value={reviewData.feedback}
+                    onChange={(e) =>
+                      setReviewData({
+                        ...reviewData,
+                        feedback: e.target.value,
+                      })
+                    }
+                  />
+
+                </div>
+
+              </div>
+
+              <div className="modal-footer">
+
+                <button
+                  className="btn btn-secondary"
+                  onClick={() =>
+                    setShowModal(false)
+                  }
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-success"
+                  onClick={saveReview}
+                >
+                  Save Review
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
     </DashboardLayout>
   );
 }

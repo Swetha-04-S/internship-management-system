@@ -42,7 +42,7 @@ function CreateTask() {
     const result = await createTask(formData);
 
     if (result.success) {
-      setMessage("Task Created Successfully");
+      setMessage("✅ Task Created Successfully");
 
       setFormData({
         title: "",
@@ -62,101 +62,127 @@ function CreateTask() {
 
       <h2 className="mb-4">Create Task</h2>
 
-      {message && (
-        <div className="alert alert-success">
-          {message}
-        </div>
-      )}
+      <div className="card shadow border-0">
+        <div className="card-body">
 
-      {error && (
-        <div className="alert alert-danger">
-          {error}
-        </div>
-      )}
+          {message && (
+            <div className="alert alert-success">
+              {message}
+            </div>
+          )}
 
-      <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="alert alert-danger">
+              {error}
+            </div>
+          )}
 
-        <div className="mb-3">
-          <label>Task Title</label>
+          <form onSubmit={handleSubmit}>
 
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
+            {/* Project */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">
+                Project
+              </label>
 
-        <div className="mb-3">
-          <label>Description</label>
-
-          <textarea
-            className="form-control"
-            rows="4"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label>Project</label>
-
-          <select
-            className="form-control"
-            name="project"
-            value={formData.project}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Project</option>
-
-            {projects.map((project) => (
-              <option
-                key={project._id}
-                value={project._id}
+              <select
+                className="form-select"
+                name="project"
+                value={formData.project}
+                onChange={handleChange}
+                required
               >
-                {project.title}
-              </option>
-            ))}
+                <option value="">Select Project</option>
 
-          </select>
+                {projects.map((project) => (
+                  <option
+                    key={project._id}
+                    value={project._id}
+                  >
+                    {project.title}
+                  </option>
+                ))}
+
+              </select>
+            </div>
+
+            {/* Task Title */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">
+                Task Title
+              </label>
+
+              <input
+                type="text"
+                className="form-control"
+                name="title"
+                placeholder="Enter task title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Description */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">
+                Description
+              </label>
+
+              <textarea
+                className="form-control"
+                rows="5"
+                name="description"
+                placeholder="Describe the task..."
+                value={formData.description}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Maximum Marks */}
+            <div className="mb-3">
+              <label className="form-label fw-bold">
+                Maximum Marks
+              </label>
+
+              <input
+                type="number"
+                className="form-control"
+                name="maxMarks"
+                value={formData.maxMarks}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Due Date */}
+            <div className="mb-4">
+              <label className="form-label fw-bold">
+                Due Date
+              </label>
+
+              <input
+                type="date"
+                className="form-control"
+                name="dueDate"
+                value={formData.dueDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary px-4"
+            >
+              Create Task
+            </button>
+
+          </form>
+
         </div>
-
-        <div className="mb-3">
-          <label>Due Date</label>
-
-          <input
-            type="date"
-            className="form-control"
-            name="dueDate"
-            value={formData.dueDate}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label>Maximum Marks</label>
-
-          <input
-            type="number"
-            className="form-control"
-            name="maxMarks"
-            value={formData.maxMarks}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button className="btn btn-primary">
-          Create Task
-        </button>
-
-      </form>
+      </div>
 
     </DashboardLayout>
   );

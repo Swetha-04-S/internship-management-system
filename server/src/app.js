@@ -7,6 +7,12 @@ const studentRoutes = require("./routes/studentRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const submissionRoutes = require("./routes/submissionRoutes");
+const progressRoutes = require("./routes/progressRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const announcementRoutes = require("./routes/announcementRoutes");
+const reportRoutes = require("./routes/reportRoutes");
+
+
 
 const app = express();
 
@@ -21,12 +27,16 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/internships", internshipRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/submissions", submissionRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/announcements", announcementRoutes);
+app.use("/api/reports", reportRoutes);
 
 module.exports = app;

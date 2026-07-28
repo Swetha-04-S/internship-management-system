@@ -20,21 +20,22 @@ export const getSubmissions = async () => {
   return data.submissions;
 };
 
+// Student gets own submissions
+export const getStudentSubmissions = async (studentId) => {
+  const response = await fetch(`${API}/student/${studentId}`);
+  const data = await response.json();
+  return data.submissions;
+};
+
 // Coordinator reviews submission
-export const reviewSubmission = async (
-  submissionId,
-  reviewData
-) => {
-  const response = await fetch(
-    `${API}/${submissionId}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reviewData),
-    }
-  );
+export const reviewSubmission = async (submissionId, reviewData) => {
+  const response = await fetch(`${API}/${submissionId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reviewData),
+  });
 
   return await response.json();
 };

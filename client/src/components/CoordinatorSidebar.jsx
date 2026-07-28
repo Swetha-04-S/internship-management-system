@@ -49,6 +49,18 @@ function CoordinatorSidebar() {
         >
           Reviews
         </Link>
+        <Link
+          className="btn btn-outline-primary"
+          to="/admin/announcements"
+        >
+          Announcements
+        </Link>
+        <Link
+          className="btn btn-outline-primary"
+          to="/admin/profile"
+        >
+          Profile
+        </Link>
 
         <Link
           className="btn btn-outline-primary"

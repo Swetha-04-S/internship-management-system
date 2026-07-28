@@ -81,9 +81,35 @@ const reviewSubmission = async (req, res) => {
     }
   };
 
+// Get submissions of a student
+const getStudentSubmissions = async (req, res) => {
+    try {
+  
+      const { studentId } = req.params;
+  
+      const submissions = await Submission.find({
+        student: studentId,
+      }).populate("task", "title");
+  
+      res.status(200).json({
+        success: true,
+        submissions,
+      });
+  
+    } catch (error) {
+  
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+  
+    }
+  };
+
 
 module.exports = {
   createSubmission,
   getSubmissions,
   reviewSubmission,
+  getStudentSubmissions,
 };

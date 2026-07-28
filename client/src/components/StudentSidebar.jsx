@@ -1,6 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function StudentSidebar() {
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path
+      ? "btn btn-success"
+      : "btn btn-outline-success";
+  };
+
   return (
     <div
       className="bg-light border-end p-3"
@@ -9,42 +17,40 @@ function StudentSidebar() {
         minHeight: "100vh",
       }}
     >
-      <h4 className="mb-4">
-        Student
-      </h4>
+      <h4 className="mb-4">Student</h4>
 
       <div className="d-grid gap-2">
 
         <Link
-          className="btn btn-outline-success"
+          className={isActive("/student")}
           to="/student"
         >
           Dashboard
         </Link>
 
         <Link
-          className="btn btn-outline-success"
-          to="/student"
+          className={isActive("/student/project")}
+          to="/student/project"
         >
           My Project
         </Link>
 
         <Link
-          className="btn btn-outline-success"
-          to="/student"
+          className={isActive("/student/tasks")}
+          to="/student/tasks"
         >
           My Tasks
         </Link>
 
         <Link
-          className="btn btn-outline-success"
+          className={isActive("/student/progress")}
           to="/student/progress"
         >
           Progress
         </Link>
 
         <Link
-          className="btn btn-outline-success"
+          className={isActive("/student/profile")}
           to="/student/profile"
         >
           Profile
