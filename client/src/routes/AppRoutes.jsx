@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LandingPage from "../pages/LandingPage";
 
+import StudentPortal from "../pages/StudentPortal";
+import CoordinatorRegisterPage from "../pages/auth/CoordinatorRegisterPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import LoginPage from "../pages/auth/LoginPage";
 
@@ -27,11 +30,12 @@ function AppRoutes() {
       <Routes>
 
         {/* Default */}
-        <Route path="/" element={<Navigate to="/login" />} />
-
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/student-portal" element={<StudentPortal />} />
         {/* Authentication */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/coordinator/register" element={<CoordinatorRegisterPage />} />
 
         {/* ================= ADMIN ROUTES ================= */}
 

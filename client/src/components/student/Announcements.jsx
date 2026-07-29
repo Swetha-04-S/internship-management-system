@@ -17,76 +17,145 @@ function Announcements() {
     }
   };
 
-  const getBadgeColor = (priority) => {
+  const getPriority = (priority) => {
     switch (priority) {
       case "High":
-        return "bg-danger";
+        return {
+          bg: "#FEE2E2",
+          color: "#DC2626",
+          icon: "bi-exclamation-circle-fill",
+        };
+
       case "Medium":
-        return "bg-warning text-dark";
-      case "Low":
-        return "bg-success";
+        return {
+          bg: "#FEF3C7",
+          color: "#D97706",
+          icon: "bi-exclamation-triangle-fill",
+        };
+
       default:
-        return "bg-secondary";
+        return {
+          bg: "#DCFCE7",
+          color: "#16A34A",
+          icon: "bi-megaphone-fill",
+        };
     }
   };
 
   return (
-    <div className="card shadow border-0 mb-4">
-      <div className="card-body">
+    <div
+      className="dashboard-card"
+      style={{
+        background: "#fff",
+        borderRadius: "18px",
+        padding: "24px",
+      }}
+    >
+      <div className="d-flex align-items-center mb-4">
 
-        <h4 className="mb-4">
-          📢 Announcements
-        </h4>
+        <div
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "16px",
+            background: "#DBEAFE",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <i
+            className="bi bi-megaphone-fill"
+            style={{
+              color: "#2563EB",
+              fontSize: "24px",
+            }}
+          ></i>
+        </div>
 
-        {announcements.length === 0 ? (
+        <div className="ms-3">
+          <h4 className="fw-bold mb-1">
+            Announcements
+          </h4>
 
-          <div className="alert alert-info">
-            No announcements available.
-          </div>
+          <small className="text-muted">
+            Latest notices from your coordinator
+          </small>
+        </div>
 
-        ) : (
+      </div>
 
-          announcements.map((announcement) => (
+      {announcements.length === 0 ? (
+        <div className="alert alert-info mb-0">
+          No announcements available.
+        </div>
+      ) : (
+        announcements.map((announcement) => {
+          const priority = getPriority(
+            announcement.priority
+          );
 
+          return (
             <div
               key={announcement._id}
-              className="border rounded p-3 mb-3"
+              className="mb-3"
+              style={{
+                borderLeft: `5px solid ${priority.color}`,
+                background: "#F8FAFC",
+                borderRadius: "14px",
+                padding: "18px",
+              }}
             >
+              <div className="d-flex justify-content-between align-items-start">
 
-              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex">
 
-                <h5>{announcement.title}</h5>
+                  <i
+                    className={`bi ${priority.icon} me-3`}
+                    style={{
+                      color: priority.color,
+                      fontSize: "22px",
+                    }}
+                  ></i>
+
+                  <div>
+
+                    <h5 className="fw-bold mb-2">
+                      {announcement.title}
+                    </h5>
+
+                    <p className="text-muted mb-2">
+                      {announcement.description}
+                    </p>
+
+                    {announcement.expiryDate && (
+                      <small className="text-secondary">
+                        Expires on{" "}
+                        {new Date(
+                          announcement.expiryDate
+                        ).toLocaleDateString()}
+                      </small>
+                    )}
+
+                  </div>
+
+                </div>
 
                 <span
-                  className={`badge ${getBadgeColor(
-                    announcement.priority
-                  )}`}
+                  className="badge"
+                  style={{
+                    background: priority.bg,
+                    color: priority.color,
+                  }}
                 >
                   {announcement.priority}
                 </span>
 
               </div>
-
-              <p className="mb-2">
-                {announcement.description}
-              </p>
-
-              {announcement.expiryDate && (
-                <small className="text-muted">
-                  Expires:{" "}
-                  {new Date(
-                    announcement.expiryDate
-                  ).toLocaleDateString()}
-                </small>
-              )}
-
             </div>
-
-          ))
-
-        )}
-
-      </div>
+          );
+        })
+      )}
     </div>
   );
 }

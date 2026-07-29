@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -21,6 +21,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: role || "student",
     });
 
     res.status(201).json({
