@@ -166,7 +166,7 @@ function AppRoutes() {
         />
 
         {/* Catch All */}
-        <Route path="*" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </BrowserRouter>

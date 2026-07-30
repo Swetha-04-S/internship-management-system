@@ -12,7 +12,8 @@ function ReviewSubmissions() {
   const [statusFilter, setStatusFilter] = useState("All");
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [selectedSubmission, setSelectedSubmission] =
+    useState(null);
 
   const [reviewData, setReviewData] = useState({
     marks: "",
@@ -55,7 +56,7 @@ function ReviewSubmissions() {
     );
 
     if (result.success) {
-      alert("Review Saved Successfully");
+      alert("Review saved successfully!");
 
       setShowModal(false);
 
@@ -65,58 +66,99 @@ function ReviewSubmissions() {
     }
   };
 
-  const filteredSubmissions = submissions.filter((submission) => {
-    const matchesSearch =
-      submission.student.name
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      submission.student.email
-        .toLowerCase()
-        .includes(search.toLowerCase()) ||
-      submission.task.title
-        .toLowerCase()
-        .includes(search.toLowerCase());
+  const filteredSubmissions = submissions
+    .filter(
+      (submission) => 
+        submission.student && 
+        submission.task
+    )
+    .filter((submission) => {
+      const matchesSearch =
+        submission.student.name
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        submission.student.email
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        submission.task.title
+          .toLowerCase()
+          .includes(search.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === "All" ||
-      submission.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "All" ||
+        submission.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+        return matchesSearch && matchesStatus;
+    });
 
   return (
     <DashboardLayout>
 
-      <h2 className="mb-4">Review Submissions</h2>
+      {/* Header */}
 
-      {/* Search & Filter */}
-      <div className="row mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
 
-        <div className="col-md-8">
+        <div>
 
-          <input
-            type="text"
-            className="form-control"
-            placeholder="🔍 Search by student, email or task..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <h2 className="fw-bold mb-1">
+            Review Submissions
+          </h2>
+
+          <p className="text-muted mb-0">
+            Review student submissions and provide
+            marks & feedback.
+          </p>
 
         </div>
 
-        <div className="col-md-4">
+        <span className="badge bg-primary fs-6 px-3 py-2">
+          {filteredSubmissions.length} Submission
+          {filteredSubmissions.length !== 1
+            ? "s"
+            : ""}
+        </span>
 
-          <select
-            className="form-select"
-            value={statusFilter}
-            onChange={(e) =>
-              setStatusFilter(e.target.value)
-            }
-          >
-            <option>All</option>
-            <option>Reviewed</option>
-            <option>Submitted</option>
-          </select>
+      </div>
+
+      {/* Search & Filter */}
+
+      <div className="card shadow-sm border-0 mb-4">
+
+        <div className="card-body">
+
+          <div className="row">
+
+            <div className="col-md-8">
+
+              <input
+                type="text"
+                className="form-control"
+                placeholder="🔍 Search by student, email or task..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+              />
+
+            </div>
+
+            <div className="col-md-4">
+
+              <select
+                className="form-select"
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(e.target.value)
+                }
+              >
+                <option>All</option>
+                <option>Reviewed</option>
+                <option>Submitted</option>
+              </select>
+
+            </div>
+
+          </div>
 
         </div>
 
@@ -141,11 +183,22 @@ function ReviewSubmissions() {
 
               <div className="d-flex justify-content-between align-items-center">
 
-                <h5>{submission.task.title}</h5>
+                <div>
+
+                  <h5 className="fw-bold mb-1">
+                    {submission.task.title}
+                  </h5>
+
+                  <small className="text-muted">
+                    Task Submission
+                  </small>
+
+                </div>
 
                 <span
                   className={`badge ${
-                    submission.status === "Reviewed"
+                    submission.status ===
+                    "Reviewed"
                       ? "bg-success"
                       : "bg-warning text-dark"
                   }`}
@@ -157,15 +210,34 @@ function ReviewSubmissions() {
 
               <hr />
 
-              <p>
-                <strong>Student:</strong>{" "}
-                {submission.student.name}
-              </p>
+              <div className="d-flex align-items-center mb-3">
 
-              <p>
-                <strong>Email:</strong>{" "}
-                {submission.student.email}
-              </p>
+                <div
+                  className="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center me-3"
+                  style={{
+                    width: 45,
+                    height: 45,
+                    fontWeight: "600",
+                  }}
+                >
+                  {submission.student.name
+                    .charAt(0)
+                    .toUpperCase()}
+                </div>
+
+                <div>
+
+                  <div className="fw-semibold">
+                    {submission.student.name}
+                  </div>
+
+                  <small className="text-muted">
+                    {submission.student.email}
+                  </small>
+
+                </div>
+
+              </div>
 
               <p>
                 <strong>GitHub:</strong>{" "}
@@ -174,7 +246,7 @@ function ReviewSubmissions() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Open Repository
+                  🔗 GitHub Repository
                 </a>
               </p>
 
@@ -185,7 +257,7 @@ function ReviewSubmissions() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Open Demo
+                  🌐 Live Demo
                 </a>
               </p>
 
@@ -199,7 +271,9 @@ function ReviewSubmissions() {
                 <>
                   <p>
                     <strong>Marks:</strong>{" "}
-                    {submission.marks}
+                    <span className="badge bg-success fs-6">
+                      {submission.marks}
+                    </span>
                   </p>
 
                   <p>
@@ -243,11 +317,11 @@ function ReviewSubmissions() {
 
           <div className="modal-dialog modal-lg">
 
-            <div className="modal-content">
+            <div className="modal-content shadow-lg border-0">
 
               <div className="modal-header">
 
-                <h5 className="modal-title">
+                <h5 className="modal-title fw-bold">
                   Review Submission
                 </h5>
 
@@ -264,13 +338,14 @@ function ReviewSubmissions() {
 
                 <div className="mb-3">
 
-                  <label className="form-label">
+                  <label className="form-label fw-semibold">
                     Marks
                   </label>
 
                   <input
                     type="number"
                     className="form-control"
+                    placeholder="Enter Marks"
                     value={reviewData.marks}
                     onChange={(e) =>
                       setReviewData({
@@ -284,13 +359,14 @@ function ReviewSubmissions() {
 
                 <div className="mb-3">
 
-                  <label className="form-label">
+                  <label className="form-label fe-semibold">
                     Feedback
                   </label>
 
                   <textarea
                     rows="4"
                     className="form-control"
+                    placeholder="Write constructive feedback..."
                     value={reviewData.feedback}
                     onChange={(e) =>
                       setReviewData({
@@ -307,7 +383,7 @@ function ReviewSubmissions() {
               <div className="modal-footer">
 
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-outline-secondary"
                   onClick={() =>
                     setShowModal(false)
                   }
@@ -316,7 +392,7 @@ function ReviewSubmissions() {
                 </button>
 
                 <button
-                  className="btn btn-success"
+                  className="btn btn-success px-4"
                   onClick={saveReview}
                 >
                   Save Review

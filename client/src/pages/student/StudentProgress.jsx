@@ -45,68 +45,161 @@ function StudentProgress() {
 
   return (
     <StudentLayout>
-      <h2 className="mb-4">Internship Progress</h2>
 
-      {/* Progress Card */}
-      <div className="card shadow border-0 mb-4">
-        <div className="card-body">
-          <h4>Overall Progress</h4>
+      {/* Header */}
 
-          <div
-            className="progress mt-3 mb-4"
-            style={{ height: "30px" }}
-          >
-            <div
-              className="progress-bar bg-success"
-              role="progressbar"
-              style={{ width: `${progress.progress}%` }}
-            >
-              {progress.progress}%
-            </div>
-          </div>
+      <div className="mb-4">
 
-          <div className="row text-center">
+        <h2 className="fw-bold mb-1">
+          Internship Progress
+        </h2>
 
-            <div className="col-md-4">
-              <h6>Total Tasks</h6>
-              <h3>{progress.totalTasks}</h3>
-            </div>
+        <p className="text-muted mb-0">
+          Track your internship performance, completed tasks and coordinator feedback.
+        </p>
 
-            <div className="col-md-4">
-              <h6>Reviewed Tasks</h6>
-              <h3>{progress.reviewedTasks}</h3>
-            </div>
-
-            <div className="col-md-4">
-              <h6>Average Marks</h6>
-              <h3>{averageMarks}</h3>
-            </div>
-
-          </div>
-        </div>
       </div>
 
-      {/* Feedback Card */}
-      <div className="card shadow border-0">
+      {/* Statistics */}
+
+      <div className="row mb-4">
+
+        <div className="col-lg-3 col-md-6 mb-3">
+
+          <div className="card shadow-sm border-0 h-100">
+
+            <div className="card-body text-center">
+
+              <h2 className="fw-bold text-primary">
+                {progress.totalTasks}
+              </h2>
+
+              <p className="text-muted mb-0">
+                Total Tasks
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+
+          <div className="card shadow-sm border-0 h-100">
+
+            <div className="card-body text-center">
+
+              <h2 className="fw-bold text-success">
+                {progress.reviewedTasks}
+              </h2>
+
+              <p className="text-muted mb-0">
+                Reviewed Tasks
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+
+          <div className="card shadow-sm border-0 h-100">
+
+            <div className="card-body text-center">
+
+              <h2 className="fw-bold text-warning">
+                {averageMarks}
+              </h2>
+
+              <p className="text-muted mb-0">
+                Average Marks
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-3 col-md-6 mb-3">
+
+          <div className="card shadow-sm border-0 h-100">
+
+            <div className="card-body text-center">
+
+              <h2 className="fw-bold text-danger">
+                {progress.progress}%
+              </h2>
+
+              <p className="text-muted">
+                Overall Progress
+              </p>
+
+              <div
+                className="progress"
+                style={{ height: "8px" }}
+              >
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  style={{
+                    width: `${progress.progress}%`,
+                  }}
+                ></div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Reviews */}
+
+      <div className="card shadow-sm border-0">
+
         <div className="card-body">
 
-          <h4 className="mb-4">Latest Reviews</h4>
+          <h4 className="fw-bold mb-4">
+            Submission History
+          </h4>
 
           {submissions.length === 0 ? (
+
             <div className="alert alert-info">
-              No submissions available.
+              No submissions available yet.
             </div>
+
           ) : (
+
             submissions.map((submission, index) => (
+
               <div
                 key={submission._id || index}
                 className="border rounded p-3 mb-3"
               >
-                <div className="d-flex justify-content-between align-items-center">
 
-                  <strong>
-                    {submission.task?.title || "Task"}
-                  </strong>
+                <div className="d-flex justify-content-between align-items-center flex-wrap">
+
+                  <div>
+
+                    <h5 className="fw-bold mb-1">
+                      {submission.task?.title || "Task"}
+                    </h5>
+
+                    <small className="text-muted">
+                      Submitted on{" "}
+                      {new Date(
+                        submission.createdAt
+                      ).toLocaleDateString()}
+                    </small>
+
+                  </div>
 
                   <span
                     className={`badge ${
@@ -122,29 +215,43 @@ function StudentProgress() {
 
                 <hr />
 
-                <p>
-                  <strong>Marks:</strong>{" "}
-                  {submission.marks ?? "-"}
-                </p>
+                <div className="row">
 
-                <p>
-                  <strong>Feedback:</strong>{" "}
-                  {submission.feedback || "Awaiting Review"}
-                </p>
+                  <div className="col-md-3 mb-3">
 
-                <small className="text-muted">
-                  Submitted on{" "}
-                  {new Date(
-                    submission.createdAt
-                  ).toLocaleDateString()}
-                </small>
+                    <strong>Marks</strong>
+
+                    <br />
+
+                    <span className="badge bg-primary mt-2 fs-6">
+                      {submission.marks ?? "-"}
+                    </span>
+
+                  </div>
+
+                  <div className="col-md-9">
+
+                    <strong>Coordinator Feedback</strong>
+
+                    <p className="mt-2 mb-0">
+                      {submission.feedback ||
+                        "Awaiting Review"}
+                    </p>
+
+                  </div>
+
+                </div>
 
               </div>
+
             ))
+
           )}
 
         </div>
+
       </div>
+
     </StudentLayout>
   );
 }

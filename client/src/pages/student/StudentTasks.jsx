@@ -27,7 +27,6 @@ function StudentTasks() {
 
       const submissionData = await getStudentSubmissions(user.id);
       setSubmissions(submissionData);
-
     } catch (error) {
       console.error(error);
     }
@@ -35,33 +34,70 @@ function StudentTasks() {
 
   const getSubmission = (taskId) => {
     return submissions.find(
-      (submission) => submission.task._id === taskId
+      (submission) => submission.task && submission.task._id === taskId
     );
   };
 
   return (
     <StudentLayout>
 
-      <h2 className="mb-4">My Tasks</h2>
+      {/* Header */}
+
+      <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+
+        <div>
+
+          <h2 className="fw-bold mb-1">
+            My Tasks
+          </h2>
+
+          <p className="text-muted mb-0">
+            Track your assigned tasks, submissions and feedback.
+          </p>
+
+        </div>
+
+        <span className="badge bg-primary fs-6 px-3 py-2">
+          {tasks.length} Task{tasks.length !== 1 ? "s" : ""}
+        </span>
+
+      </div>
 
       {tasks.length === 0 ? (
-        <div className="alert alert-warning">
-          No Tasks Assigned
+
+        <div className="alert alert-warning shadow-sm">
+          <h5>No Tasks Assigned</h5>
+          <p className="mb-0">
+            Your coordinator hasn't assigned any tasks yet.
+          </p>
         </div>
+
       ) : (
+
         tasks.map((task) => {
           const submission = getSubmission(task._id);
 
           return (
             <div
               key={task._id}
-              className="card shadow border-0 mb-4"
+              className="card shadow-sm border-0 mb-4"
             >
+
               <div className="card-body">
 
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between align-items-center flex-wrap">
 
-                  <h4>{task.title}</h4>
+                  <div>
+
+                    <h4 className="fw-bold mb-1">
+                      {task.title}
+                    </h4>
+
+                    <small className="text-muted">
+                      Internship Task
+                    </small>
+
+                  </div>
 
                   <span
                     className={`badge ${
@@ -81,20 +117,62 @@ function StudentTasks() {
 
                 <hr />
 
-                <p>{task.description}</p>
+                <p className="text-muted">
+                  {task.description}
+                </p>
 
-                <div className="row">
+                <div className="row mb-3">
 
-                  <div className="col-md-4">
-                    <strong>Maximum Marks</strong>
-                    <br />
-                    {task.maxMarks}
+                  <div className="col-md-4 mb-3">
+
+                    <div className="border rounded p-3 text-center">
+
+                      <h5 className="fw-bold text-primary">
+                        {task.maxMarks}
+                      </h5>
+
+                      <small className="text-muted">
+                        Maximum Marks
+                      </small>
+
+                    </div>
+
                   </div>
 
-                  <div className="col-md-4">
-                    <strong>Due Date</strong>
-                    <br />
-                    {new Date(task.dueDate).toLocaleDateString()}
+                  <div className="col-md-4 mb-3">
+
+                    <div className="border rounded p-3 text-center">
+
+                      <h6 className="fw-bold text-danger">
+                        {new Date(
+                          task.dueDate
+                        ).toLocaleDateString()}
+                      </h6>
+
+                      <small className="text-muted">
+                        Due Date
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                  <div className="col-md-4 mb-3">
+
+                    <div className="border rounded p-3 text-center">
+
+                      <h6 className="fw-bold">
+                        {submission
+                          ? "Submitted"
+                          : "Not Submitted"}
+                      </h6>
+
+                      <small className="text-muted">
+                        Submission
+                      </small>
+
+                    </div>
+
                   </div>
 
                 </div>
@@ -105,31 +183,52 @@ function StudentTasks() {
 
                   <Link
                     to={`/student/submit-work/${task._id}`}
-                    className="btn btn-success"
+                    className="btn btn-success px-4"
                   >
                     Submit Work
                   </Link>
 
                 ) : (
 
-                  <>
-                    <p>
-                      <strong>Obtained Marks:</strong>{" "}
-                      {submission.marks}
-                    </p>
+                  <div className="row">
 
-                    <p>
-                      <strong>Feedback:</strong>{" "}
-                      {submission.feedback || "Awaiting Review"}
-                    </p>
-                  </>
+                    <div className="col-md-6 mb-3">
+
+                      <strong>
+                        Obtained Marks
+                      </strong>
+
+                      <br />
+
+                      <span className="badge bg-success fs-6 mt-2">
+                        {submission.marks ?? "-"}
+                      </span>
+
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+
+                      <strong>
+                        Feedback
+                      </strong>
+
+                      <p className="mt-2 mb-0">
+                        {submission.feedback ||
+                          "Awaiting Review"}
+                      </p>
+
+                    </div>
+
+                  </div>
 
                 )}
 
               </div>
+
             </div>
           );
         })
+
       )}
 
     </StudentLayout>

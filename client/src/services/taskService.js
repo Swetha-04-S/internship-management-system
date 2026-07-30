@@ -23,3 +23,23 @@ export const getProjectTasks = async (projectId) => {
   const data = await response.json();
   return data.tasks;
 };
+
+export const updateTask = async (id, taskData) => {
+  const response = await fetch(`${API}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(taskData),
+  });
+
+  return await response.json();
+};
+
+export const deleteTask = async (id) => {
+  const response = await fetch(`${API}/${id}`, {
+    method: "DELETE",
+  });
+
+  return await response.json();
+};

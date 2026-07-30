@@ -7,7 +7,7 @@ const getStudents = async (req, res) => {
     const students = await User.find(
       { role: "student" },
       "-password"
-    );
+    ).populate("assignedProject", "title");
 
     res.status(200).json({
       success: true,

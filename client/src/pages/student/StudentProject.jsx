@@ -21,51 +21,202 @@ function StudentProject() {
     }
   };
 
+  if (project === null) {
+    return (
+      <StudentLayout>
+        <div className="text-center py-5">
+          <div
+            className="spinner-border text-primary mb-3"
+            role="status"
+          ></div>
+
+          <h5 className="text-muted">
+            Loading project...
+          </h5>
+        </div>
+      </StudentLayout>
+    );
+  }
+
   return (
     <StudentLayout>
 
-      <h2 className="mb-4">My Project</h2>
+      {/* Header */}
+
+      <div className="mb-4">
+
+        <h2 className="fw-bold mb-1">
+          My Project
+        </h2>
+
+        <p className="text-muted mb-0">
+          View your assigned internship project and important details.
+        </p>
+
+      </div>
 
       {!project ? (
-        <div className="alert alert-warning">
-          No Project Assigned Yet
+
+        <div className="alert alert-warning shadow-sm">
+          <h5 className="mb-2">
+            No Project Assigned
+          </h5>
+
+          <p className="mb-0">
+            Your coordinator hasn't assigned a project yet.
+            Please check back later.
+          </p>
         </div>
+
       ) : (
-        <div className="card shadow border-0">
 
-          <div className="card-body">
+        <>
+          {/* Project Card */}
 
-            <h3>{project.title}</h3>
+          <div className="card shadow-sm border-0 mb-4">
 
-            <hr />
+            <div className="card-body">
 
-            <p>{project.description}</p>
+              <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
 
-            <div className="row">
+                <div>
 
-              <div className="col-md-4 mb-3">
-                <strong>Duration</strong>
-                <br />
-                {project.duration}
+                  <h3 className="fw-bold mb-1">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-muted mb-0">
+                    Internship Project
+                  </p>
+
+                </div>
+
+                <span className="badge bg-primary fs-6 px-3 py-2">
+                  Active
+                </span>
+
               </div>
 
-              <div className="col-md-4 mb-3">
-                <strong>Difficulty</strong>
-                <br />
-                {project.difficulty}
+              <hr />
+
+              <p className="text-muted">
+                {project.description}
+              </p>
+
+            </div>
+
+          </div>
+
+          {/* Project Details */}
+
+          <div className="row">
+
+            <div className="col-lg-4 col-md-6 mb-4">
+
+              <div className="card shadow-sm border-0 h-100">
+
+                <div className="card-body text-center">
+
+                  <h5 className="fw-bold text-primary">
+                    {project.duration || "-"}
+                  </h5>
+
+                  <p className="text-muted mb-0">
+                    Duration
+                  </p>
+
+                </div>
+
               </div>
 
-              <div className="col-md-4 mb-3">
-                <strong>Deadline</strong>
-                <br />
-                {new Date(project.deadline).toLocaleDateString()}
+            </div>
+
+            <div className="col-lg-4 col-md-6 mb-4">
+
+              <div className="card shadow-sm border-0 h-100">
+
+                <div className="card-body text-center">
+
+                  <h5 className="fw-bold text-warning">
+                    {project.difficulty || "-"}
+                  </h5>
+
+                  <p className="text-muted mb-0">
+                    Difficulty
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div className="col-lg-4 col-md-12 mb-4">
+
+              <div className="card shadow-sm border-0 h-100">
+
+                <div className="card-body text-center">
+
+                  <h5 className="fw-bold text-danger">
+                    {project.deadline
+                      ? new Date(
+                          project.deadline
+                        ).toLocaleDateString()
+                      : "-"}
+                  </h5>
+
+                  <p className="text-muted mb-0">
+                    Deadline
+                  </p>
+
+                </div>
+
               </div>
 
             </div>
 
           </div>
 
-        </div>
+          {/* Tips Card */}
+
+          <div className="card shadow-sm border-0">
+
+            <div className="card-body">
+
+              <h4 className="fw-bold mb-3">
+                Project Guidelines
+              </h4>
+
+              <ul className="mb-0">
+
+                <li>
+                  Complete all assigned tasks before the deadline.
+                </li>
+
+                <li>
+                  Push your latest code to GitHub regularly.
+                </li>
+
+                <li>
+                  Test your application before submitting.
+                </li>
+
+                <li>
+                  Include a working demo link whenever possible.
+                </li>
+
+                <li>
+                  Review coordinator feedback after each submission.
+                </li>
+
+              </ul>
+
+            </div>
+
+          </div>
+
+        </>
+
       )}
 
     </StudentLayout>

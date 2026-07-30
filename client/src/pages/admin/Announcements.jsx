@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import DashboardLayout from "../../components/DashboardLayout";
 
 import {
@@ -9,7 +8,6 @@ import {
 } from "../../services/announcementService";
 
 function Announcements() {
-
   const [announcements, setAnnouncements] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -19,40 +17,37 @@ function Announcements() {
     expiryDate: "",
   });
 
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
     loadAnnouncements();
   }, []);
 
   const loadAnnouncements = async () => {
     try {
-
       const data = await getAnnouncements();
-
       setAnnouncements(data);
-
     } catch (error) {
-
       console.error(error);
-
     }
   };
 
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
 
+    if (message) setMessage("");
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     const response = await createAnnouncement(formData);
 
     if (response.success) {
+      setMessage("✅ Announcement created successfully.");
 
       setFormData({
         title: "",
@@ -62,58 +57,80 @@ function Announcements() {
       });
 
       loadAnnouncements();
-
     }
-
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm("Delete this announcement?")) return;
 
     await deleteAnnouncement(id);
 
     loadAnnouncements();
-
   };
 
   return (
     <DashboardLayout>
 
-      <h2 className="mb-4">
-        Announcement Management
-      </h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
 
-      {/* Create Form */}
+        <div>
 
-      <div className="card shadow border-0 mb-4">
+          <h2 className="fw-bold mb-1">
+            Announcements
+          </h2>
 
+          <p className="text-muted mb-0">
+            Create and manage announcements for students.
+          </p>
+
+        </div>
+
+        <span className="badge bg-primary fs-6 px-3 py-2">
+          {announcements.length} Announcement
+          {announcements.length !== 1 ? "s" : ""}
+        </span>
+
+      </div>
+
+      {message && (
+        <div className="alert alert-success">
+          {message}
+        </div>
+      )}
+
+      <div className="card shadow-sm border-0 mb-4">
         <div className="card-body">
 
           <form onSubmit={handleSubmit}>
 
             <div className="mb-3">
-
-              <label>Title</label>
+              <label className="form-label fw-semibold">
+                Title
+              </label>
 
               <input
                 className="form-control"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
+                placeholder="Enter announcement title"
                 required
               />
-
             </div>
 
             <div className="mb-3">
 
-              <label>Description</label>
+              <label className="form-label fw-semibold">
+                Description
+              </label>
 
               <textarea
                 className="form-control"
-                rows="3"
+                rows="4"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
+                placeholder="Announcement details..."
                 required
               />
 
@@ -121,12 +138,14 @@ function Announcements() {
 
             <div className="row">
 
-              <div className="col-md-6">
+              <div className="col-md-6 mb-3">
 
-                <label>Priority</label>
+                <label className="form-label fw-semibold">
+                  Priority
+                </label>
 
                 <select
-                  className="form-control"
+                  className="form-select"
                   name="priority"
                   value={formData.priority}
                   onChange={handleChange}
@@ -138,9 +157,11 @@ function Announcements() {
 
               </div>
 
-              <div className="col-md-6">
+              <div className="col-md-6 mb-3">
 
-                <label>Expiry Date</label>
+                <label className="form-label fw-semibold">
+                  Expiry Date
+                </label>
 
                 <input
                   type="date"
@@ -154,34 +175,31 @@ function Announcements() {
 
             </div>
 
-            <button className="btn btn-primary mt-4">
+            <div className="text-end">
 
-              Create Announcement
+              <button className="btn btn-primary px-4">
+                Publish Announcement
+              </button>
 
-            </button>
+            </div>
 
           </form>
 
         </div>
-
       </div>
 
-      {/* Announcement List */}
-
-      <div className="card shadow border-0">
+      <div className="card shadow-sm border-0">
 
         <div className="card-body">
 
-          <h4 className="mb-4">
-            Announcements
+          <h4 className="fw-bold mb-4">
+            Recent Announcements
           </h4>
 
           {announcements.length === 0 ? (
 
             <div className="alert alert-info">
-
               No announcements available.
-
             </div>
 
           ) : (
@@ -193,15 +211,13 @@ function Announcements() {
                 className="border rounded p-3 mb-3"
               >
 
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between align-items-start flex-wrap">
 
                   <div>
 
-                    <h5>
-                      {announcement.title}
-                    </h5>
+                    <h5>{announcement.title}</h5>
 
-                    <p>
+                    <p className="text-muted mb-2">
                       {announcement.description}
                     </p>
 
@@ -219,18 +235,14 @@ function Announcements() {
 
                   </div>
 
-                  <div>
-
-                    <button
-                      className="btn btn-danger"
-                      onClick={() =>
-                        handleDelete(announcement._id)
-                      }
-                    >
-                      Delete
-                    </button>
-
-                  </div>
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={() =>
+                      handleDelete(announcement._id)
+                    }
+                  >
+                    Delete
+                  </button>
 
                 </div>
 
