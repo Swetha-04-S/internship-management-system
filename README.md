@@ -89,17 +89,6 @@ npm start
 npm run dev
 
 
-## Screenshots
-
-### Landing Page
-
-![Landing Page](screenshots/landing-page.png)
-
-### Coordinator Dashboard
-
-![Dashboard](screenshots/dashboard.png)
-
-
 ## Author
 
 **Swetha S**
